@@ -2,53 +2,66 @@ import { useState } from "react";
 import AddEditForm from "./AddEditForm";
 import Header from "./Header";
 import "./App.css";
-import calculateTotalExpenses from "./components/calculateTotalExpenses";
+import calculateTotalExpenses from "./calculateTotalExpenses";
 
 function App() {
   const [transactions, setTransactions] = useState([
     { id: 1, title: "breakfast", amount: 50, date: "2026-10-27" },
     { id: 2, title: "lunch", amount: 100, date: "2026-10-27" },
   ]);
+
   const [currentTransaction, setCurrentTransaction] = useState(null);
   const [isAddEditMode, setIsAddEditMode] = useState(false);
 
+  // Delete transaction
   const handleDelete = (id) => {
     const updatedTransactions = transactions.filter(
-      (transaction) => transaction.id !== id,
+      (transaction) => transaction.id !== id
     );
+
     setTransactions(updatedTransactions);
   };
 
+  // Add new transaction
   const handleAdd = () => {
     setCurrentTransaction(null);
     setIsAddEditMode(true);
   };
 
+  // Edit transaction
   const handleEdit = (transaction) => {
     setCurrentTransaction(transaction);
     setIsAddEditMode(true);
   };
 
+  // Save transaction
   const saveFormData = (payload) => {
     if (payload.id) {
-      //Edit existing transaction
       const updatedTransactions = transactions.map((t) =>
-        t.id === payload.id ? payload : t,
+        t.id === payload.id ? payload : t
       );
+
       setTransactions(updatedTransactions);
     } else {
-      //Add new transaction
-      const newTransaction = { ...payload, id: transactions.length + 1 };
+      const newTransaction = {
+        ...payload,
+        id: Date.now(),
+      };
+
       setTransactions([...transactions, newTransaction]);
     }
+
     setIsAddEditMode(false);
     setCurrentTransaction(null);
   };
 
   return (
     <div className="app-container">
+
       <Header handleAdd={handleAdd} />
+
       <h2>Expenses</h2>
+
       <table>
         <thead>
           <tr>
@@ -58,14 +71,19 @@ function App() {
             <th>Actions</th>
           </tr>
         </thead>
+
         <tbody>
-          {transactions.map((transaction, index) => (
+          {transactions.map((transaction) => (
             <tr key={transaction.id}>
               <td>{transaction.title}</td>
               <td>{transaction.amount}</td>
               <td>{transaction.date}</td>
+
               <td>
-                <button onClick={() => handleEdit(transaction)}>Edit</button>
+                <button onClick={() => handleEdit(transaction)}>
+                  Edit
+                </button>
+
                 <button onClick={() => handleDelete(transaction.id)}>
                   Delete
                 </button>
@@ -74,13 +92,18 @@ function App() {
           ))}
         </tbody>
       </table>
-      <h3>Total Expenses: {calculateTotalExpenses(transactions)}</h3>
+
+      <h3>
+        Total Expenses: {calculateTotalExpenses(transactions)}
+      </h3>
+
       {isAddEditMode && (
         <AddEditForm
           currentTransaction={currentTransaction}
           saveFormData={saveFormData}
         />
       )}
+
     </div>
   );
 }
