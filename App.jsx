@@ -1,6 +1,6 @@
 import { useState } from "react";
-import AddEditForm from "./components/AddEditForm";
-import Header from "./components/Header";
+import AddEditForm from "./AddEditForm";
+import Header from "./Header";
 import "./App.css";
 import calculateTotalExpenses from "./components/calculateTotalExpenses";
 
